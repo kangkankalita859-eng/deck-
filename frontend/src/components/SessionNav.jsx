@@ -32,10 +32,19 @@ export default function SessionNav({
       }
     >
       {/* LEFT : HOME + MODE */}
-      <div style={isMobile ? { ...mobileLeft, minWidth: showMobileMenu ? "80px" : "40px" } : left}>
+      <div style={isMobile ? { ...mobileLeft, minWidth: showMobileMenu ? "88px" : "40px" } : left}>
         {showMobileMenu && (
           <button 
-            style={{...homeBtn, marginRight: "8px"}} 
+            style={{
+              ...homeBtn,
+              boxSizing: "border-box",
+              width: "40px",
+              minWidth: "40px",
+              height: "40px",
+              minHeight: "40px",
+              padding: 0,
+              marginRight: "8px",
+            }}
             onClick={() => onMenuToggle && onMenuToggle()}
           >
             ☰
@@ -85,7 +94,16 @@ export default function SessionNav({
       </div>
 
       {/* RIGHT : MODES */}
-      <div style={isMobile ? mobileRight : right}>
+      <div
+        style={
+          isMobile
+            ? {
+                ...mobileRight,
+                maxWidth: `calc(100% - ${showMobileMenu ? "230px" : "182px"})`,
+              }
+            : right
+        }
+      >
         {showSscFilter && (
           <label style={isMobile ? mobileFilterPill : filterPill}>
             <input
@@ -161,7 +179,7 @@ export default function SessionNav({
           <button
             style={
               isMobile
-                ? { ...mobileLinkBtn, ...themeToggleBtn }
+                ? { ...mobileLinkBtn, ...themeToggleBtn, minWidth: "38px", padding: "6px 4px" }
                 : { ...linkBtn, ...themeToggleBtn }
             }
             onClick={onToggleTheme}
@@ -275,9 +293,11 @@ const mobileNav = {
   ...nav,
   height: "50px",
   padding: "0 4px",
+  boxSizing: "border-box",
+  width: "100%",
   flexWrap: "nowrap",
   overflow: "hidden",
-  minWidth: "100%", // Ensure full width
+  minWidth: 0,
   maxWidth: "100vw", // Prevent overflow
 };
 
@@ -289,48 +309,46 @@ const mobileLeft = {
 
 const mobileCenter = {
   ...center,
-  flex: 1,
+  flex: "0 0 auto",
   gap: "4px",
   justifyContent: "center",
-  minWidth: "60px",
+  minWidth: 0,
 };
 
 const mobileRight = {
   ...right,
   display: "flex",
-  gap: "2px", // Reduced gap to prevent overlapping
+  gap: "1px",
   flexShrink: 0,
   overflowX: "auto", // Enable horizontal scrolling
   overflowY: "hidden", // Hide vertical overflow
   scrollbarWidth: "thin", // Thin scrollbar for better UX
   msOverflowStyle: "none", // Hide scrollbar in IE/Edge
   minWidth: "0", // Allow shrinking
-  maxWidth: "60%", // Limit max width to prevent overlap
-  "&::-webkit-scrollbar": {
-    height: "4px", // Thin horizontal scrollbar
-  },
-  "&::-webkit-scrollbar-thumb": {
-    backgroundColor: "#ccc",
-    borderRadius: "2px",
-  },
+  overscrollBehaviorX: "contain",
 };
 
 const mobileHomeBtn = {
   ...homeBtn,
+  boxSizing: "border-box",
+  width: "40px",
   padding: "8px",
   fontSize: "16px",
   minWidth: "40px",
+  maxWidth: "40px",
+  height: "40px",
   minHeight: "40px",
 };
 
 const mobileLinkBtn = {
-  padding: "6px 8px", // Reduced padding
+  boxSizing: "border-box",
+  padding: "6px 3px",
   borderRadius: "6px",
   border: "1px solid #ccc",
   background: "#fff",
   cursor: "pointer",
-  fontSize: "11px", // Reduced font size
-  minWidth: "60px", // Reduced minimum width
+  fontSize: "10px",
+  minWidth: "50px",
   minHeight: "36px", // Reduced height
   display: "flex",
   alignItems: "center",
@@ -350,6 +368,7 @@ const mobileDeckToggleBtn = {
 };
 
 const mobileApplyBtn = {
+  boxSizing: "border-box",
   padding: "6px 8px",
   borderRadius: "6px",
   border: "1px solid #1976d2",
