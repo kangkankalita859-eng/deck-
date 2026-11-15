@@ -21,43 +21,66 @@ export default function SessionNav({
   onToggleTheme,
 }) {
   const showMobileMenu = Boolean(isMobile && onMenuToggle);
+  const useCompactMobileNav = Boolean(isMobile && mode.includes("Cards"));
 
   return (
     <div
       className="flash-session-nav"
       style={
         isMobile
-          ? { ...mobileNav, ...(isDarkTheme ? darkNav : {}) }
+          ? {
+              ...(useCompactMobileNav ? compactMobileNav : mobileNav),
+              ...(isDarkTheme ? darkNav : {}),
+            }
           : { ...nav, ...(isDarkTheme ? darkNav : {}) }
       }
     >
       {/* LEFT : HOME + MODE */}
-      <div style={isMobile ? { ...mobileLeft, minWidth: showMobileMenu ? "88px" : "40px" } : left}>
+      <div
+        style={
+          isMobile
+            ? {
+                ...mobileLeft,
+                minWidth: showMobileMenu
+                  ? useCompactMobileNav ? "88px" : "80px"
+                  : "40px",
+              }
+            : left
+        }
+      >
         {showMobileMenu && (
           <button 
-            style={{
-              ...homeBtn,
-              boxSizing: "border-box",
-              width: "40px",
-              minWidth: "40px",
-              height: "40px",
-              minHeight: "40px",
-              padding: 0,
-              marginRight: "8px",
-            }}
+            style={
+              useCompactMobileNav
+                ? compactMobileMenuBtn
+                : { ...homeBtn, marginRight: "8px" }
+            }
             onClick={() => onMenuToggle && onMenuToggle()}
           >
             ☰
           </button>
         )}
-        <button style={isMobile ? mobileHomeBtn : homeBtn} onClick={() => onGoHome && onGoHome()}>
+        <button
+          style={
+            isMobile
+              ? useCompactMobileNav ? compactMobileHomeBtn : mobileHomeBtn
+              : homeBtn
+          }
+          onClick={() => onGoHome && onGoHome()}
+        >
           🏠 {isMobile ? "" : "Home"}
         </button>
         {!isMobile && <strong style={{ marginLeft: "12px" }}>{mode}</strong>}
       </div>
 
       {/* CENTER : RANGE SELECT */}
-      <div style={isMobile ? mobileCenter : center}>
+      <div
+        style={
+          isMobile
+            ? useCompactMobileNav ? compactMobileCenter : mobileCenter
+            : center
+        }
+      >
         <input
           type="number"
           placeholder="Start"
@@ -73,7 +96,11 @@ export default function SessionNav({
           style={isMobile ? mobileInput : input}
         />
         <button
-          style={isMobile ? mobileApplyBtn : applyBtn}
+          style={
+            isMobile
+              ? useCompactMobileNav ? compactMobileApplyBtn : mobileApplyBtn
+              : applyBtn
+          }
           onClick={() => {
             const start = Number(
               document.getElementById("startInput").value
@@ -97,10 +124,12 @@ export default function SessionNav({
       <div
         style={
           isMobile
-            ? {
-                ...mobileRight,
-                maxWidth: `calc(100% - ${showMobileMenu ? "230px" : "182px"})`,
-              }
+            ? useCompactMobileNav
+              ? {
+                  ...compactMobileRight,
+                  maxWidth: `calc(100% - ${showMobileMenu ? "230px" : "182px"})`,
+                }
+              : mobileRight
             : right
         }
       >
@@ -128,14 +157,22 @@ export default function SessionNav({
         )}
         {mode !== "Read" && (
           <button
-            style={isMobile ? mobileLinkBtn : (mode === "Read" ? activeBtn : linkBtn)}
+            style={
+              isMobile
+                ? useCompactMobileNav ? compactMobileLinkBtn : mobileLinkBtn
+                : (mode === "Read" ? activeBtn : linkBtn)
+            }
             onClick={onGoRead}
           >
             📘 {isMobile ? "Vocab" : "Vocab List"}
           </button>
         )}
         <button
-          style={isMobile ? mobileLinkBtn : (mode === "Cards" ? activeBtn : linkBtn)}
+          style={
+            isMobile
+              ? useCompactMobileNav ? compactMobileLinkBtn : mobileLinkBtn
+              : (mode === "Cards" ? activeBtn : linkBtn)
+          }
           onClick={onGoCards}
         >
           🃏 {isMobile ? "Cards" : "Flash Cards"}
@@ -169,7 +206,11 @@ export default function SessionNav({
         )}
         {onGoTest && (
           <button
-            style={isMobile ? mobileLinkBtn : (mode === "Test" ? activeBtn : linkBtn)}
+            style={
+              isMobile
+                ? useCompactMobileNav ? compactMobileLinkBtn : mobileLinkBtn
+                : (mode === "Test" ? activeBtn : linkBtn)
+            }
             onClick={onGoTest}
           >
             {isMobile ? "📝 Test" : (testLabel || "📝 Test")}
@@ -179,7 +220,9 @@ export default function SessionNav({
           <button
             style={
               isMobile
-                ? { ...mobileLinkBtn, ...themeToggleBtn, minWidth: "38px", padding: "6px 4px" }
+                ? useCompactMobileNav
+                  ? { ...compactMobileLinkBtn, ...themeToggleBtn, minWidth: "38px", padding: "6px 4px" }
+                  : { ...mobileLinkBtn, ...themeToggleBtn }
                 : { ...linkBtn, ...themeToggleBtn }
             }
             onClick={onToggleTheme}
@@ -293,12 +336,17 @@ const mobileNav = {
   ...nav,
   height: "50px",
   padding: "0 4px",
-  boxSizing: "border-box",
-  width: "100%",
   flexWrap: "nowrap",
   overflow: "hidden",
+  minWidth: "100%",
+  maxWidth: "100vw",
+};
+
+const compactMobileNav = {
+  ...mobileNav,
+  boxSizing: "border-box",
+  width: "100%",
   minWidth: 0,
-  maxWidth: "100vw", // Prevent overflow
 };
 
 const mobileLeft = {
@@ -309,46 +357,60 @@ const mobileLeft = {
 
 const mobileCenter = {
   ...center,
-  flex: "0 0 auto",
+  flex: 1,
   gap: "4px",
   justifyContent: "center",
-  minWidth: 0,
+  minWidth: "60px",
 };
 
 const mobileRight = {
   ...right,
   display: "flex",
-  gap: "1px",
+  gap: "2px",
   flexShrink: 0,
   overflowX: "auto", // Enable horizontal scrolling
   overflowY: "hidden", // Hide vertical overflow
   scrollbarWidth: "thin", // Thin scrollbar for better UX
   msOverflowStyle: "none", // Hide scrollbar in IE/Edge
   minWidth: "0", // Allow shrinking
+  maxWidth: "60%",
+  "&::-webkit-scrollbar": {
+    height: "4px",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    backgroundColor: "#ccc",
+    borderRadius: "2px",
+  },
+};
+
+const compactMobileCenter = {
+  ...mobileCenter,
+  flex: "0 0 auto",
+  minWidth: 0,
+};
+
+const compactMobileRight = {
+  ...mobileRight,
+  gap: "1px",
   overscrollBehaviorX: "contain",
 };
 
 const mobileHomeBtn = {
   ...homeBtn,
-  boxSizing: "border-box",
-  width: "40px",
   padding: "8px",
   fontSize: "16px",
   minWidth: "40px",
-  maxWidth: "40px",
-  height: "40px",
   minHeight: "40px",
 };
 
 const mobileLinkBtn = {
-  boxSizing: "border-box",
-  padding: "6px 3px",
+  padding: "6px 8px",
   borderRadius: "6px",
   border: "1px solid #ccc",
   background: "#fff",
   cursor: "pointer",
-  fontSize: "10px",
-  minWidth: "50px",
+  fontSize: "11px",
+  minWidth: "60px",
   minHeight: "36px", // Reduced height
   display: "flex",
   alignItems: "center",
@@ -357,8 +419,35 @@ const mobileLinkBtn = {
   flexShrink: "0", // Prevent shrinking
 };
 
-const mobileDeckToggleBtn = {
+const compactMobileHomeBtn = {
+  ...mobileHomeBtn,
+  boxSizing: "border-box",
+  width: "40px",
+  maxWidth: "40px",
+  height: "40px",
+};
+
+const compactMobileLinkBtn = {
   ...mobileLinkBtn,
+  boxSizing: "border-box",
+  padding: "6px 3px",
+  fontSize: "10px",
+  minWidth: "50px",
+};
+
+const compactMobileMenuBtn = {
+  ...homeBtn,
+  boxSizing: "border-box",
+  width: "40px",
+  minWidth: "40px",
+  height: "40px",
+  minHeight: "40px",
+  padding: 0,
+  marginRight: "8px",
+};
+
+const mobileDeckToggleBtn = {
+  ...compactMobileLinkBtn,
   minWidth: "38px",
   minHeight: "36px",
   padding: "4px 8px",
@@ -368,7 +457,6 @@ const mobileDeckToggleBtn = {
 };
 
 const mobileApplyBtn = {
-  boxSizing: "border-box",
   padding: "6px 8px",
   borderRadius: "6px",
   border: "1px solid #1976d2",
@@ -378,6 +466,11 @@ const mobileApplyBtn = {
   fontSize: "12px",
   minWidth: "50px",
   minHeight: "30px",
+};
+
+const compactMobileApplyBtn = {
+  ...mobileApplyBtn,
+  boxSizing: "border-box",
 };
 
 const mobileInput = {
