@@ -308,6 +308,7 @@ export default function Home({ onStart, onIdioms, onSynonymsAntonyms, onHomonyms
                 right: 0,
                 height: '60px',
                 display: 'flex',
+                flexWrap: 'nowrap',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '0 16px',
@@ -327,16 +328,26 @@ export default function Home({ onStart, onIdioms, onSynonymsAntonyms, onHomonyms
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '18px'
+                    fontSize: '18px',
+                    flexShrink: 0
                   }}
                   onClick={() => setMobileMenuOpen(true)}
                 >
                   ☰
                 </button>
-                <span style={{ fontSize: '16px', fontWeight: '600' }}>
+                <span style={{
+                  flex: 1,
+                  minWidth: 0,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  textAlign: 'center',
+                  fontSize: '16px',
+                  fontWeight: '600'
+                }}>
                   Smart Vocabulary Trainer
                 </span>
-                <div style={{ width: '44px' }} />
+                <div style={{ width: '44px', flexShrink: 0 }} />
               </div>
             )}
             
