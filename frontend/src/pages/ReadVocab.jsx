@@ -151,7 +151,13 @@ export default function ReadVocab({
         onMenuToggle={() => setMobileMenuOpen(true)}
       />
 
-      <div style={{ ...page, background: isMobile ? "#fff" : page.background }}>
+      <div
+        style={{
+          ...page,
+          ...(!isMobile ? {} : mobilePage),
+          background: isMobile ? "#fff" : page.background,
+        }}
+      >
         {/* PERSISTED DATA INFO */}
         {showPersistedInfo && (
           <div style={persistedInfo}>
@@ -192,47 +198,47 @@ export default function ReadVocab({
           </div>
         )}
         
-        <div style={container}>
-          <h2 style={heading}>Read & Memorize Vocabulary</h2>
+        <div style={isMobile ? mobileContainer : container}>
+          <h2 style={isMobile ? mobileHeading : heading}>Read & Memorize Vocabulary</h2>
 
-          <table style={table}>
+          <table style={isMobile ? mobileTable : table}>
             <thead>
               <tr>
-                <th style={th}>SN</th>
-                <th style={th}>Phrase / Meaning</th>
-                <th style={th}>One Word</th>
-                <th style={th}>Hindi</th>
-                <th style={th}>Exam Count</th>
-                <th style={th}>Example Sentence</th>
-                <th style={th}>Synonyms</th>
+                <th style={isMobile ? { ...mobileTh, width: "6%" } : th}>SN</th>
+                <th style={isMobile ? { ...mobileTh, width: "19%" } : th}>Phrase / Meaning</th>
+                <th style={isMobile ? { ...mobileTh, width: "12%" } : th}>One Word</th>
+                <th style={isMobile ? { ...mobileTh, width: "12%" } : th}>Hindi</th>
+                <th style={isMobile ? { ...mobileTh, width: "11%" } : th}>Exam Count</th>
+                <th style={isMobile ? { ...mobileTh, width: "22%" } : th}>Example Sentence</th>
+                <th style={isMobile ? { ...mobileTh, width: "18%" } : th}>Synonyms</th>
               </tr>
             </thead>
 
             <tbody>
               {displayedVocab.map((item) => (
                 <tr key={item.id}>
-                  <td style={td}>{item.id}</td>
-                  <td style={td}>{item.meaning}</td>
-                  <td style={{ ...td, fontWeight: "600" }}>
+                  <td style={isMobile ? mobileTd : td}>{item.id}</td>
+                  <td style={isMobile ? mobileTd : td}>{item.meaning}</td>
+                  <td style={{ ...(isMobile ? mobileTd : td), fontWeight: "600" }}>
                     {item.word}
                   </td>
-                  <td style={td}>{item.hindiMeaning}</td>
-                  <td style={{ ...td, textAlign: "center", fontWeight: "600", color: "#e74c3c" }}>
+                  <td style={isMobile ? mobileTd : td}>{item.hindiMeaning}</td>
+                  <td style={{ ...(isMobile ? mobileTd : td), textAlign: "center", fontWeight: "600", color: "#e74c3c" }}>
                     {Number(item.sscCount || 0)} ({Number(item.otherExamCount || 0)})
                   </td>
                   <td
                     style={{
-                      ...td,
+                      ...(isMobile ? mobileTd : td),
                       fontStyle: "italic",
                       color: "#444",
-                      maxWidth: "300px",
+                      ...(isMobile ? {} : { maxWidth: "300px" }),
                     }}
                   >
                     {item.example ? item.example : "—" }
                   </td>
-                  <td style={{ ...td, maxWidth: "150px" }}>
+                  <td style={{ ...(isMobile ? mobileTd : td), ...(isMobile ? {} : { maxWidth: "150px" }) }}>
                     {item.synonyms.map((synonym, index) => (
-                      <div key={index} style={{ fontSize: "0.85rem" }}>
+                      <div key={index} style={{ fontSize: isMobile ? "7px" : "0.85rem" }}>
                         {synonym}
                       </div>
                     ))}
@@ -275,6 +281,51 @@ const page = {
   alignItems: "flex-start",
   paddingTop: "80px",
   marginLeft: "0px",
+};
+
+const mobilePage = {
+  minHeight: "calc(100vh - 50px)",
+  flexDirection: "column",
+  alignItems: "center",
+  paddingTop: "62px",
+};
+
+const mobileContainer = {
+  width: "100%",
+  padding: "12px 4px",
+  boxSizing: "border-box",
+};
+
+const mobileHeading = {
+  margin: "0 6px 10px",
+  fontSize: "18px",
+  lineHeight: "1.15",
+};
+
+const mobileTable = {
+  width: "100%",
+  tableLayout: "fixed",
+  borderCollapse: "collapse",
+  fontSize: "7.5px",
+  lineHeight: "1.25",
+};
+
+const mobileTh = {
+  border: "1px solid #ccc",
+  padding: "3px 1px",
+  background: "#eee",
+  textAlign: "left",
+  overflowWrap: "break-word",
+  wordBreak: "break-word",
+  verticalAlign: "middle",
+};
+
+const mobileTd = {
+  border: "1px solid #ccc",
+  padding: "4px 2px",
+  verticalAlign: "top",
+  overflowWrap: "break-word",
+  wordBreak: "break-word",
 };
 
 const container = {
