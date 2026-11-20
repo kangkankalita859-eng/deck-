@@ -22,6 +22,7 @@ export default function SessionNav({
 }) {
   const showMobileMenu = Boolean(isMobile && onMenuToggle);
   const useCompactMobileNav = Boolean(isMobile && mode.includes("Cards"));
+  const useWrappedMobileReadNav = Boolean(isMobile && mode === "Read");
 
   return (
     <div
@@ -29,7 +30,11 @@ export default function SessionNav({
       style={
         isMobile
           ? {
-              ...(useCompactMobileNav ? compactMobileNav : mobileNav),
+              ...(useWrappedMobileReadNav
+                ? wrappedMobileReadNav
+                : useCompactMobileNav
+                  ? compactMobileNav
+                  : mobileNav),
               ...(isDarkTheme ? darkNav : {}),
             }
           : { ...nav, ...(isDarkTheme ? darkNav : {}) }
@@ -41,8 +46,13 @@ export default function SessionNav({
           isMobile
             ? {
                 ...mobileLeft,
+                ...(useWrappedMobileReadNav ? wrappedMobileReadLeft : {}),
                 minWidth: showMobileMenu
-                  ? useCompactMobileNav ? "88px" : "80px"
+                  ? useWrappedMobileReadNav
+                    ? "88px"
+                    : useCompactMobileNav
+                      ? "88px"
+                      : "80px"
                   : "40px",
               }
             : left
@@ -77,7 +87,11 @@ export default function SessionNav({
       <div
         style={
           isMobile
-            ? useCompactMobileNav ? compactMobileCenter : mobileCenter
+            ? useWrappedMobileReadNav
+              ? wrappedMobileReadCenter
+              : useCompactMobileNav
+                ? compactMobileCenter
+                : mobileCenter
             : center
         }
       >
@@ -124,12 +138,14 @@ export default function SessionNav({
       <div
         style={
           isMobile
-            ? useCompactMobileNav
-              ? {
-                  ...compactMobileRight,
-                  maxWidth: `calc(100% - ${showMobileMenu ? "230px" : "182px"})`,
-                }
-              : mobileRight
+            ? useWrappedMobileReadNav
+              ? wrappedMobileReadRight
+              : useCompactMobileNav
+                ? {
+                    ...compactMobileRight,
+                    maxWidth: `calc(100% - ${showMobileMenu ? "230px" : "182px"})`,
+                  }
+                : mobileRight
             : right
         }
       >
@@ -347,6 +363,44 @@ const compactMobileNav = {
   boxSizing: "border-box",
   width: "100%",
   minWidth: 0,
+};
+
+const wrappedMobileReadNav = {
+  ...mobileNav,
+  boxSizing: "border-box",
+  height: "94px",
+  alignContent: "flex-start",
+  alignItems: "center",
+  flexWrap: "wrap",
+  gap: "4px 0",
+  padding: "4px",
+};
+
+const wrappedMobileReadLeft = {
+  ...mobileLeft,
+  height: "40px",
+};
+
+const wrappedMobileReadCenter = {
+  ...mobileCenter,
+  flex: "1 1 auto",
+  minWidth: "132px",
+  height: "40px",
+  justifyContent: "flex-end",
+  paddingRight: "4px",
+};
+
+const wrappedMobileReadRight = {
+  ...mobileRight,
+  boxSizing: "border-box",
+  width: "100%",
+  maxWidth: "100%",
+  height: "42px",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "4px",
+  overflowX: "hidden",
+  padding: "0 2px",
 };
 
 const mobileLeft = {

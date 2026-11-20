@@ -287,7 +287,7 @@ const mobilePage = {
   minHeight: "calc(100vh - 50px)",
   flexDirection: "column",
   alignItems: "center",
-  paddingTop: "62px",
+  paddingTop: "104px",
 };
 
 const mobileContainer = {
