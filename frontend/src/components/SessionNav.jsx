@@ -61,9 +61,11 @@ export default function SessionNav({
         {showMobileMenu && (
           <button 
             style={
-              useCompactMobileNav
-                ? compactMobileMenuBtn
-                : { ...homeBtn, marginRight: "8px" }
+              useWrappedMobileReadNav
+                ? wrappedMobileReadMenuBtn
+                : useCompactMobileNav
+                  ? compactMobileMenuBtn
+                  : { ...homeBtn, marginRight: "8px" }
             }
             onClick={() => onMenuToggle && onMenuToggle()}
           >
@@ -73,7 +75,11 @@ export default function SessionNav({
         <button
           style={
             isMobile
-              ? useCompactMobileNav ? compactMobileHomeBtn : mobileHomeBtn
+              ? useWrappedMobileReadNav
+                ? wrappedMobileReadHomeBtn
+                : useCompactMobileNav
+                  ? compactMobileHomeBtn
+                  : mobileHomeBtn
               : homeBtn
           }
           onClick={() => onGoHome && onGoHome()}
@@ -100,19 +106,35 @@ export default function SessionNav({
           placeholder="Start"
           defaultValue={config?.start}
           id="startInput"
-          style={isMobile ? mobileInput : input}
+          style={
+            isMobile
+              ? useWrappedMobileReadNav
+                ? wrappedMobileReadInput
+                : mobileInput
+              : input
+          }
         />
         <input
           type="number"
           placeholder="End"
           defaultValue={mode === "Cards" ? (config?.rangeEnd ?? config?.limit) : config?.limit}
           id="limitInput"
-          style={isMobile ? mobileInput : input}
+          style={
+            isMobile
+              ? useWrappedMobileReadNav
+                ? wrappedMobileReadInput
+                : mobileInput
+              : input
+          }
         />
         <button
           style={
             isMobile
-              ? useCompactMobileNav ? compactMobileApplyBtn : mobileApplyBtn
+              ? useWrappedMobileReadNav
+                ? wrappedMobileReadApplyBtn
+                : useCompactMobileNav
+                  ? compactMobileApplyBtn
+                  : mobileApplyBtn
               : applyBtn
           }
           onClick={() => {
@@ -150,23 +172,39 @@ export default function SessionNav({
         }
       >
         {showSscFilter && (
-          <label style={isMobile ? mobileFilterPill : filterPill}>
+          <label
+            style={
+              isMobile
+                ? useWrappedMobileReadNav
+                  ? wrappedMobileReadFilterPill
+                  : mobileFilterPill
+                : filterPill
+            }
+          >
             <input
               type="checkbox"
               checked={!!sscOnly}
               onChange={(e) => onToggleSscOnly && onToggleSscOnly(e.target.checked)}
-              style={{ marginRight: 6 }}
+              style={{ marginRight: useWrappedMobileReadNav ? 3 : 6 }}
             />
             {isMobile ? "SSC" : "SSC (≥1)"}
           </label>
         )}
         {showExamFrequencySort && (
-          <label style={isMobile ? mobileFilterPill : filterPill}>
+          <label
+            style={
+              isMobile
+                ? useWrappedMobileReadNav
+                  ? wrappedMobileReadFilterPill
+                  : mobileFilterPill
+                : filterPill
+            }
+          >
             <input
               type="checkbox"
               checked={!!sortByExamFrequency}
               onChange={(e) => onToggleSortByExamFrequency && onToggleSortByExamFrequency(e.target.checked)}
-              style={{ marginRight: 6 }}
+              style={{ marginRight: useWrappedMobileReadNav ? 3 : 6 }}
             />
             {isMobile ? "By Freq" : "By Frequency"}
           </label>
@@ -175,7 +213,11 @@ export default function SessionNav({
           <button
             style={
               isMobile
-                ? useCompactMobileNav ? compactMobileLinkBtn : mobileLinkBtn
+                ? useWrappedMobileReadNav
+                  ? wrappedMobileReadLinkBtn
+                  : useCompactMobileNav
+                    ? compactMobileLinkBtn
+                    : mobileLinkBtn
                 : (mode === "Read" ? activeBtn : linkBtn)
             }
             onClick={onGoRead}
@@ -186,7 +228,11 @@ export default function SessionNav({
         <button
           style={
             isMobile
-              ? useCompactMobileNav ? compactMobileLinkBtn : mobileLinkBtn
+              ? useWrappedMobileReadNav
+                ? wrappedMobileReadLinkBtn
+                : useCompactMobileNav
+                  ? compactMobileLinkBtn
+                  : mobileLinkBtn
               : (mode === "Cards" ? activeBtn : linkBtn)
           }
           onClick={onGoCards}
@@ -236,7 +282,9 @@ export default function SessionNav({
           <button
             style={
               isMobile
-                ? useCompactMobileNav
+                ? useWrappedMobileReadNav
+                  ? wrappedMobileReadLinkBtn
+                  : useCompactMobileNav
                   ? { ...compactMobileLinkBtn, ...themeToggleBtn, minWidth: "38px", padding: "6px 4px" }
                   : { ...mobileLinkBtn, ...themeToggleBtn }
                 : { ...linkBtn, ...themeToggleBtn }
@@ -365,44 +413,6 @@ const compactMobileNav = {
   minWidth: 0,
 };
 
-const wrappedMobileReadNav = {
-  ...mobileNav,
-  boxSizing: "border-box",
-  height: "94px",
-  alignContent: "flex-start",
-  alignItems: "center",
-  flexWrap: "wrap",
-  gap: "4px 0",
-  padding: "4px",
-};
-
-const wrappedMobileReadLeft = {
-  ...mobileLeft,
-  height: "40px",
-};
-
-const wrappedMobileReadCenter = {
-  ...mobileCenter,
-  flex: "1 1 auto",
-  minWidth: "132px",
-  height: "40px",
-  justifyContent: "flex-end",
-  paddingRight: "4px",
-};
-
-const wrappedMobileReadRight = {
-  ...mobileRight,
-  boxSizing: "border-box",
-  width: "100%",
-  maxWidth: "100%",
-  height: "42px",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: "4px",
-  overflowX: "hidden",
-  padding: "0 2px",
-};
-
 const mobileLeft = {
   ...left,
   flexShrink: 0,
@@ -435,6 +445,48 @@ const mobileRight = {
     backgroundColor: "#ccc",
     borderRadius: "2px",
   },
+};
+
+const wrappedMobileReadNav = {
+  ...mobileNav,
+  boxSizing: "border-box",
+  height: "94px",
+  alignContent: "flex-start",
+  alignItems: "center",
+  flexWrap: "wrap",
+  gap: "4px 0",
+  padding: "4px",
+};
+
+const wrappedMobileReadLeft = {
+  ...mobileLeft,
+  height: "40px",
+};
+
+const wrappedMobileReadCenter = {
+  ...mobileCenter,
+  flex: "1 1 auto",
+  minWidth: "132px",
+  height: "40px",
+  justifyContent: "flex-end",
+  paddingRight: "4px",
+};
+
+const wrappedMobileReadRight = {
+  ...right,
+  boxSizing: "border-box",
+  display: "flex",
+  flexShrink: 0,
+  width: "100%",
+  maxWidth: "100%",
+  minWidth: 0,
+  height: "42px",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "4px",
+  overflowX: "hidden",
+  overflowY: "hidden",
+  padding: "0 2px",
 };
 
 const compactMobileCenter = {
@@ -548,6 +600,57 @@ const mobileFilterPill = {
   fontSize: "10px",
   userSelect: "none",
   whiteSpace: "nowrap",
+};
+
+const wrappedMobileReadMenuBtn = {
+  ...compactMobileMenuBtn,
+  width: "36px",
+  minWidth: "36px",
+  height: "36px",
+  minHeight: "36px",
+  marginRight: "4px",
+};
+
+const wrappedMobileReadHomeBtn = {
+  ...compactMobileHomeBtn,
+  width: "36px",
+  maxWidth: "36px",
+  height: "36px",
+  minWidth: "36px",
+  minHeight: "36px",
+  padding: "4px",
+  fontSize: "14px",
+};
+
+const wrappedMobileReadInput = {
+  ...mobileInput,
+  width: "38px",
+  minHeight: "28px",
+  fontSize: "11px",
+};
+
+const wrappedMobileReadApplyBtn = {
+  ...compactMobileApplyBtn,
+  minWidth: "48px",
+  minHeight: "28px",
+  padding: "4px 6px",
+  fontSize: "11px",
+};
+
+const wrappedMobileReadFilterPill = {
+  ...mobileFilterPill,
+  boxSizing: "border-box",
+  minHeight: "30px",
+  padding: "4px 5px",
+  fontSize: "9px",
+};
+
+const wrappedMobileReadLinkBtn = {
+  ...compactMobileLinkBtn,
+  minWidth: "48px",
+  minHeight: "30px",
+  padding: "4px",
+  fontSize: "9px",
 };
 
 const darkNav = {
