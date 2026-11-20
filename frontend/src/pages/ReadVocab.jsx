@@ -134,6 +134,7 @@ export default function ReadVocab({
       {/* NAV BAR */}
       <SessionNav
         mode="Read"
+        mobileReadNavLayout="reference"
         config={config}
         onApplyRange={onUpdateConfig}
         onGoRead={() => {}}
@@ -141,10 +142,11 @@ export default function ReadVocab({
         onGoTest={onGoTest}
         testLabel="📝 Exam"
         onGoHome={onGoHome}
+        showVocabLink
         showSscFilter
         sscOnly={sscOnly}
         onToggleSscOnly={setSscOnly}
-        showExamFrequencySort
+        showExamFrequencySort={!isMobile}
         sortByExamFrequency={sortByExamFrequency}
         onToggleSortByExamFrequency={setSortByExamFrequency}
         isMobile={isMobile}
@@ -200,6 +202,16 @@ export default function ReadVocab({
         
         <div style={isMobile ? mobileContainer : container}>
           <h2 style={isMobile ? mobileHeading : heading}>Read & Memorize Vocabulary</h2>
+          {isMobile && (
+            <label style={mobileSortFilter}>
+              <input
+                type="checkbox"
+                checked={sortByExamFrequency}
+                onChange={(event) => setSortByExamFrequency(event.target.checked)}
+              />
+              By Frequency
+            </label>
+          )}
 
           <table style={isMobile ? mobileTable : table}>
             <thead>
@@ -287,7 +299,7 @@ const mobilePage = {
   minHeight: "calc(100vh - 50px)",
   flexDirection: "column",
   alignItems: "center",
-  paddingTop: "104px",
+  paddingTop: "40px",
 };
 
 const mobileContainer = {
@@ -300,6 +312,16 @@ const mobileHeading = {
   margin: "0 6px 10px",
   fontSize: "18px",
   lineHeight: "1.15",
+};
+
+const mobileSortFilter = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-end",
+  gap: "4px",
+  margin: "0 6px 8px",
+  fontSize: "10px",
+  whiteSpace: "nowrap",
 };
 
 const mobileTable = {
